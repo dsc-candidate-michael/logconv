@@ -9,12 +9,12 @@ import (
 type ServerType string
 
 const (
-	ServerTypeNginx ServerType = "ServerTypeNginx"
-	ServerTypeFake  ServerType = "ServerTypeFake"
+	ServerTypeNginx = "Nginx"
+	ServerTypeFake  = "Fake"
 )
 
 type LogParserConf struct {
-	Type ServerType
+	Type string
 }
 
 type LogParser interface {
@@ -57,7 +57,9 @@ func (nginxLogParser *NginxLogParser) Parse(log string) (*ReqDetail, error) {
 }
 
 // FakeLogParser can be used to simplify unit and integration tests.
-// It assumes comma delimiters and only contains the required data.
+// It assumes logs are in the following format:
+// <remote_address>,<route>,<status_code>
+// example: 123.222.333.345,/order,402
 type FakeLogParser struct{}
 
 func (nginxLogParser *FakeLogParser) Parse(log string) (*ReqDetail, error) {
