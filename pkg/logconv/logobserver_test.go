@@ -13,6 +13,7 @@ func TestLogFileObserverStart(t *testing.T) {
 	quitChannel := make(chan bool)
 	fakeLogFilePath := "../../test-artifacts/fake.log"
 	fakeLogFileHandle, _ := os.OpenFile(fakeLogFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	defer fakeLogFileHandle.Close()
 	parser, _ := NewLogParser(LogParserConf{
 		Type: ServerTypeFake,
 	})
@@ -89,5 +90,29 @@ func TestLogFileObserverStart(t *testing.T) {
 		}
 	case <-time.After(5 * time.Second):
 		t.Errorf("Timeout occured waiting for the channel to close")
+	}
+}
+
+func TestLogFileObserverFileDNE(t *testing.T) {
+	reqDetailChannel := make(chan *ReqDetail)
+	quitChannel := make(chan bool)
+	fakeLogFilePath := "../../test-artifacts/file-dne.log"
+
+	parser, _ := NewLogParser(LogParserConf{
+		Type: ServerTypeFake,
+	})
+
+	logFileObserverConfig := LogObserverConfig{
+		Parser:           parser,
+		Type:             LogObserverTypeFile,
+		InputFile:        fakeLogFilePath,
+		ReqDetailChannel: reqDetailChannel,
+		QuitChannel:      quitChannel,
+	}
+
+	logObserver, err := NewLogObserver(logFileObserverConfig)
+	err = logObserver.Start()
+	if err == nil {
+		t.Errorf("Expected an error on Start when the input file DNE")
 	}
 }

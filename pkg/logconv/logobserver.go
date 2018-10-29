@@ -52,6 +52,7 @@ func (logFileObserver *LogFileObserver) Start() error {
 		MustExist: true,
 		Follow:    true,
 		Logger:    tail.DiscardingLogger,
+		ReOpen:    true,
 	}
 	observer, err := tail.TailFile(logFileObserver.inputFile, observerConfig)
 	if err != nil {
@@ -69,6 +70,10 @@ func (logFileObserver *LogFileObserver) produceReqDetails() error {
 		select {
 		case line := <-logFileObserver.observer.Lines:
 			// Todo (mk): Consider performing better error handling here
+			if line.Err != nil {
+				fmt.Printf("there was an error with this line...")
+				continue
+			}
 			reqDetail, err := logFileObserver.parser.Parse(line.Text)
 			if err == nil {
 				logFileObserver.reqDetailChannel <- reqDetail

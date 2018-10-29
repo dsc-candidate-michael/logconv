@@ -20,7 +20,6 @@ func main() {
 	inputLogFile := getEnv("INPUT_LOG_FILE", "/var/log/nginx/access.log")
 	batchTime := getEnv("BATCH_TIME", "5")
 	serverType := getEnv("SERVER_TYPE", "Nginx")
-
 	batchInterval, err := strconv.Atoi(batchTime)
 	if err != nil {
 		fmt.Printf("Invalid batch time: %s", batchTime)
@@ -33,12 +32,17 @@ func main() {
 		Type:             logconv.LogConvBatchType,
 		ServerType:       serverType,
 	}
-	lc, err := logconv.NewLogConv(config)
+	lc := logconv.NewLogConv(config)
+
+	err = lc.Subscribe()
 	if err != nil {
-		fmt.Printf("Error creating LogConv (%v)", err)
+		fmt.Printf("Could not subscribe (%v)", err)
+		os.Exit(1)
 	}
+
 	err = lc.Start()
 	if err != nil {
-		fmt.Printf("Could not start logconv (%v)", err)
+		fmt.Printf("Could not start (%v)", err)
+		os.Exit(1)
 	}
 }

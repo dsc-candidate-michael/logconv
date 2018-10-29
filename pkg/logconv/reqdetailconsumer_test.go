@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"sync"
 	"testing"
+	"time"
 )
 
 func TestReqDetailConsumer(t *testing.T) {
@@ -69,7 +70,7 @@ func TestReqDetailConsumer(t *testing.T) {
 	for _, reqDetail := range reqDetails {
 		reqDetailChannel <- reqDetail
 	}
-
+	time.Sleep(250 * time.Millisecond)
 	results := reqDetailConsumer.Flush()
 	equal := reflect.DeepEqual(results, expectedResult)
 	if !equal {

@@ -12,6 +12,9 @@ clean:
 
 test: unit-test
 
+deploy: image
+	kubectl apply -f k8s/config.yml
+
 unit-test:
 	go test -v ./...
 

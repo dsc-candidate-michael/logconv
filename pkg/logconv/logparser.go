@@ -59,7 +59,7 @@ func (nginxLogParser *NginxLogParser) Parse(log string) (*ReqDetail, error) {
 // FakeLogParser can be used to simplify unit and integration tests.
 // It assumes logs are in the following format:
 // <remote_address>,<route>,<status_code>
-// example: 123.222.333.345,/order,402
+// example: 123.222.11.32,/order,402
 type FakeLogParser struct{}
 
 func (nginxLogParser *FakeLogParser) Parse(log string) (*ReqDetail, error) {
