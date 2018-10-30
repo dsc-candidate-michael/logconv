@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+      - name: shared-data
+        emptyDir: {}
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        volumeMounts:
+        - name: shared-data
+          mountPath: /var/log/nginx/
+        ports:
+        - containerPort: 80
+      - name: logconv
+        image: logconv:v1
+        volumeMounts:
+        - name: shared-data
+          mountPath: /var/log/nginx/
+          
+        # env:
+        # - name: INPUT_LOG_FILE
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: logconv-config
+        #       key: input.log
+        # - name: BATCH_TIME
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: logconv-config
+        #       key: batch.time
+        # - name: SERVER_TYPE
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: logconv-config
+        #       key: server.type
+        command:
+        - /bin/sh
+        - -c
+        - "./logconv"
+
