@@ -2,6 +2,8 @@ package logconv
 
 import (
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/hpcloud/tail"
 )
@@ -28,6 +30,7 @@ func NewLogObserver(config LogObserverConfig) (LogObserver, error) {
 			inputFile:        config.InputFile,
 			reqDetailChannel: config.ReqDetailChannel,
 			quitChannel:      config.QuitChannel,
+			errorLogger:      log.New(os.Stderr, "[logobserver]", 0),
 		}, nil
 	default:
 		return nil, fmt.Errorf("%s LogObserver not supported", config.Type)
@@ -45,6 +48,7 @@ type LogFileObserver struct {
 	inputFile        string
 	reqDetailChannel chan *ReqDetail
 	quitChannel      chan bool
+	errorLogger      *log.Logger
 }
 
 func (logFileObserver *LogFileObserver) Start() error {
@@ -69,14 +73,15 @@ func (logFileObserver *LogFileObserver) produceReqDetails() error {
 	for {
 		select {
 		case line := <-logFileObserver.observer.Lines:
-			// Todo (mk): Consider performing better error handling here
 			if line.Err != nil {
-				fmt.Printf("there was an error with this line...")
+				logFileObserver.errorLogger.Println("Could not retrieve log line")
 				continue
 			}
 			reqDetail, err := logFileObserver.parser.Parse(line.Text)
 			if err == nil {
 				logFileObserver.reqDetailChannel <- reqDetail
+			} else {
+				logFileObserver.errorLogger.Printf("Could not parse log line (%s)\n", line.Text)
 			}
 		case <-logFileObserver.quitChannel:
 			close(logFileObserver.quitChannel)

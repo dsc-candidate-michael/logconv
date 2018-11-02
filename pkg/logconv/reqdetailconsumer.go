@@ -43,7 +43,6 @@ func (rdc *ReqDetailConsumer) Subscribe() {
 	for {
 		select {
 		case reqDetail := <-rdc.reqDetailChannel:
-			fmt.Printf("req detail %v", reqDetail)
 			rdc.consume(reqDetail)
 		case <-rdc.quitChannel:
 			// Producer closes the channel, we don't need to do anything here
@@ -78,7 +77,6 @@ func (rdc *ReqDetailConsumer) reset() {
 func (rdc *ReqDetailConsumer) consume(reqDetail *ReqDetail) {
 	rdc.storeLock.Lock()
 	defer rdc.storeLock.Unlock()
-	fmt.Printf("consuming: %v", reqDetail)
 	if reqDetail.statusCode < 600 && reqDetail.statusCode >= 500 {
 		rdc.store[Key50xStatusCode]++
 		rdc.store[reqDetail.route]++

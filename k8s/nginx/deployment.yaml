@@ -17,7 +17,7 @@ spec:
         emptyDir: {}
       containers:
       - name: nginx
-        image: nginx:1.7.9
+        image: logconv-nginx:v1
         volumeMounts:
         - name: shared-data
           mountPath: /var/log/nginx/
@@ -34,7 +34,7 @@ spec:
         #   valueFrom:
         #     configMapKeyRef:
         #       name: logconv-config
-        #       key: input.log
+        #       key: input.file
         # - name: BATCH_TIME
         #   valueFrom:
         #     configMapKeyRef:
@@ -48,5 +48,5 @@ spec:
         command:
         - /bin/sh
         - -c
-        - "./logconv"
+        - "./logconv | tee /var/log/stats.log"
 

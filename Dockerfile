@@ -6,3 +6,4 @@ WORKDIR /go/src/github.com/logconv
 
 RUN go build ./cmd...
 
+CMD make test

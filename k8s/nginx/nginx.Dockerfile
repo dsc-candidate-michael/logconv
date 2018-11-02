@@ -1,4 +1,4 @@
-FROM nginx:1.7.9
+FROM nginx:1.15
 
 # Just for debugging purposes
 RUN apt-get update && apt-get install -y vim 
