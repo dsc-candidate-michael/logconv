@@ -38,8 +38,7 @@ destroy:
 
 create-cluster:
 	minikube start
-	mminikube addons enable ingress
-	eval $(minikube docker-env)
-
+	minikube addons enable ingress
+	
 destroy-cluster:
 	minikube delete

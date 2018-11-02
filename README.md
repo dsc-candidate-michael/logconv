@@ -47,9 +47,10 @@ To run the tests in a Docker container, you can run `make test-container`.
 ### Deploy
 
 1. `make create-cluster` will start minikube, enable the necessary addons, and use the docker daemon from your host so we can leverage the docker images we build locally.  
-2. `make configure` will create a ConfigMap to be used by the nginx-logconv pods. 
-2. `make image` will create the necessary images for our nginx-logconv pods. 
-3. `make deploy` will create the Ingress, Deployment, and LoadBalancer Service. 
+2. Run `eval $(minikube docker-env)` in order to use the docker daemon from your host so we can leverage the dodcker images we build locally. 
+3. `make configure` will create a ConfigMap to be used by the nginx-logconv pods. 
+4. `make image` will create the necessary images for our nginx-logconv pods. 
+5. `make deploy` will create the Ingress, Deployment, and LoadBalancer Service. 
 
 You can now access the Nginx service by grabbing the IP address 
 `minikube ip`. Throw this IP into curl, wget, or your favorite browser. 
