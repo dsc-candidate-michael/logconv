@@ -24,7 +24,7 @@ image:
 	docker build -t logconv-nginx:v1 . -f k8s/nginx/nginx.Dockerfile
 
 configure: 
-	kubectl create configmap logconv-config --from-file=k8s/logconv.config
+	kubectl apply -f k8s/config.yaml
 
 deploy:
 	kubectl apply -f k8s/ingress.yaml

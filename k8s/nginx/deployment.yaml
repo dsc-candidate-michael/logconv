@@ -27,24 +27,23 @@ spec:
         image: logconv:v1
         volumeMounts:
         - name: shared-data
-          mountPath: /var/log/nginx/
-          
-        # env:
-        # - name: INPUT_LOG_FILE
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: logconv-config
-        #       key: input.file
-        # - name: BATCH_TIME
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: logconv-config
-        #       key: batch.time
-        # - name: SERVER_TYPE
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: logconv-config
-        #       key: server.type
+          mountPath: /var/log/nginx/          
+        env:
+        - name: INPUT_LOG_FILE
+          valueFrom:
+            configMapKeyRef:
+              name: logconv-config
+              key: input-file
+        - name: BATCH_TIME
+          valueFrom:
+            configMapKeyRef:
+              name: logconv-config
+              key: batch-time
+        - name: SERVER_TYPE
+          valueFrom:
+            configMapKeyRef:
+              name: logconv-config
+              key: server-type
         command:
         - /bin/sh
         - -c

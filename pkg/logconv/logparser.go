@@ -36,7 +36,8 @@ func NewLogParser(config LogParserConf) (LogParser, error) {
 type NginxLogParser struct{}
 
 // Todo (mk): Consider making this function more robust. At the moment, it is
-// tightly coupled with the exact formatting of the logs.
+// tightly coupled with the exact formatting of the logs. We could also improve
+// this by not compiling the regular expressions everytime.
 func (nginxLogParser *NginxLogParser) Parse(log string) (*ReqDetail, error) {
 	// Todo (mk): Not totally sure how to do posative lookaheads in Go...
 	// just going to remove the comma for now
